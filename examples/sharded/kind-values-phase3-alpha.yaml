@@ -1,0 +1,37 @@
+# Phase 3 creates deployments for shard 1 (root)
+#
+# helm upgrade \
+#  --install \
+#  --values ./hack/kind-values-phase3.yaml \
+#  --namespace kcp-alpha \
+#  --create-namespace \
+#  alpha ./charts/kcp
+#
+fullnameOverride: alpha
+externalHostname: "kcp.dev.local"
+etcd:
+  enabled: true
+kcp:
+  externalLogicalClusterAdminFlag: true
+  enabled: true
+  v: 8
+  tokenAuth:
+    enabled: true
+  tag: main
+  batteries:
+    - workspace-types
+    - metrics-viewer
+# hack to run without dns
+#  hostAliases:
+#    enabled: true
+#    values:
+#    - hostnames:
+#        - "kcp.dev.local"
+#      ip: "10.96.169.47"
+externalCache:
+  enabled: true
+  cacheInternalHostname: "cache-cache.kcp-cache.svc"
+sharding:
+  enabled: true
+  isShard: false
+  isRoot: true
