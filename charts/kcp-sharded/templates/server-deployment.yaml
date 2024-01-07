@@ -248,6 +248,10 @@ spec:
             {{- end }}
             - name: kcp-ca
               mountPath: /etc/kcp/tls/ca
+            {{- if .Values.caBundle.enabled }}
+            - name: kcp-ca-bundle
+              mountPath: /etc/kcp/tls/ca-bundle
+            {{- end }}
             - name: kcp-cert
               mountPath: /etc/kcp/tls/server
             - name: kcp-client-ca
@@ -306,6 +310,11 @@ spec:
         - name: kcp-ca
           secret:
             secretName: {{ include "certificates.kcp" . }}-ca
+        {{- if .Values.caBundle.enabled }}
+        - name: kcp-ca-bundle
+          configMap:
+              name: {{ .Values.caBundle.configMapName }}
+        {{- end }}
         - name: kcp-cert
           secret:
             secretName: {{ include "kcp.fullname" .}}-cert

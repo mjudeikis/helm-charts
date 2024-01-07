@@ -23,7 +23,8 @@ kcp-cache - namespace for cache server
 
 Having shards in different clusters is out of scope for this example. You need to
 create cross-cluster communication between shards yourself if you want to do that.
-You can use service mesh for that, or projects like [Submariner](https://submariner.io/).
+You can use service mesh for that, or projects like [Submariner](https://submariner.io/),
+[Skupper](https://skupper.io/).
 
 To generate certificates for KCP you need to create certificates in phases.
 Assuming you have a cluster with cert-manager installed, and you want to create
