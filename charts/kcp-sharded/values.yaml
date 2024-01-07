@@ -108,6 +108,13 @@ oidc:
   # second cert in the tls.crt key", it's easier to mount the CA cert secret.
   caSecretKeyName: "tls.crt"
 
+# caBundle is a CA bundle that will be used to verify connections.
+# see https://cert-manager.io/docs/trust/trust-manager/#installation
+caBundle:
+  enabled: false
+  configMapName: ""
+  configMapKey: ""
+
 cache:
   enabled: false
 
