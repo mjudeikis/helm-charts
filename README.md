@@ -2,6 +2,9 @@
 
 Repository for kcp helm charts.
 
+Important: charts `proxy`, `shard`, `cache` and `certificates` are work in
+progress and are not ready for production use.
+
 ## Pre-requisites
 
 - Cert-manager installed and running
