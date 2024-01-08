@@ -14,19 +14,26 @@ etcd:
 kcp:
   enabled: false
 kcpFrontProxy:
+  image: quay.io/mangirdas/kcp-sharded
+  tag: v2
+ # tag: main
+  v: 12
+  hostAliases:
+    enabled: true
+    values:
+    - hostnames:
+        - "kcp.dev.local"
+      ip: "10.96.180.249"
   enabled: true
   ingress:
+    secret: proxy-front-proxy-cert
     enabled: true
     annotations:
       kubernetes.io/ingress.class: "nginx"
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-# hack to run without dns
-#  hostAliases:
-#    enabled: true
-#    values:
-#    - hostnames:
-#        - "kcp.dev.local"
-#      ip: "10.96.169.47"
+      acme.cert-manager.io/http01-edit-in-place: "true"
+      # this is ingress-controller-specific and might need configuration
+      # depending on the ingress-controller in use.
+      nginx.ingress.kubernetes.io/backend-protocol: HTTPS
   tokenAuth:
     enabled: true
 cache:
@@ -38,4 +45,7 @@ sharding:
   isShard: false # set this to true for the all shards, false for the first (root) shard.
   isRoot: true # set this to true for the first (root) shard, false for all other shards.
   rootShardInternalHostname: "alpha.kcp-alpha.svc.cluster.local"
-
+caBundle:
+  enabled: false
+  configMapName: faros.sh
+  configMapKey: root-certs.pem

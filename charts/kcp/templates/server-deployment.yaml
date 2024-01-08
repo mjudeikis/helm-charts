@@ -1,3 +1,18 @@
+{{- if .Values.kcp.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "kcp.fullname" . }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "server"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.kcp.volumeSize }}
+  {{ with .Values.kcp.volumeClassName -}}storageClassName: {{ . }}{{- end }}
 {{- if .Values.audit.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -105,6 +120,14 @@ spec:
             {{- end}}
           command: ["/kcp", "start"]
           args:
+            {{- if .Values.kcp.sharding.enabled }}
+            {{- if .Values.kcp.sharding.isShard }}
+            - --shard-name={{ include "kcp.fullname" . }}
+            - --root-shard-kubeconfig-file=/etc/kcp/shard/kubeconfig
+            {{- end }}
+            - --shard-client-cert-file=/etc/kcp/tls/shard-client/tls.crt
+            - --shard-client-key-file=/etc/kcp/tls/shard-client/tls.key
+            {{- end }}
             {{- if .Values.kcp.etcd.serverAddress }}
             - --etcd-servers={{ .Values.kcp.etcd.serverAddress }}
             {{- else if .Values.etcd.enabled }}
@@ -133,9 +156,15 @@ spec:
             - --requestheader-group-headers=X-Remote-Group
             - --root-directory=/etc/kcp/config
             - --shard-virtual-workspace-ca-file=/etc/kcp/tls/ca/tls.crt
-            - --shard-base-url=https://{{ include "kcp.fullname" . }}:6443
+            {{- if .Values.kcp.sharding.enabled }}
+            {{- if .Values.kcp.sharding.isRoot }}
+            - --external-hostname={{ include "kcp.fullname" . }}.{{ .Release.Namespace }}:6443
             - --shard-external-url=https://$(EXTERNAL_HOSTNAME):$(EXTERNAL_PORT)
+            {{- else }}
             - --external-hostname=$(EXTERNAL_HOSTNAME):$(EXTERNAL_PORT)
+            - --shard-external-url=https://$(EXTERNAL_HOSTNAME):$(EXTERNAL_PORT)
+            {{- end }}
+            {{- end }}
             {{- if .Values.oidc.enabled }}
             - --oidc-issuer-url={{ .Values.oidc.issuerUrl }}
             - --oidc-client-id={{ .Values.oidc.clientId }}
@@ -163,6 +192,9 @@ spec:
             {{- end }}
             {{- if .Values.kcp.profiling.enabled }}
             - --profiler-address=0.0.0.0:{{- .Values.kcp.profiling.port -}}
+            {{- end }}
+            {{- if or (eq .Values.cache.enabled true) (eq .Values.externalCache.enabled true) }}
+            - --cache-kubeconfig=/etc/kcp/cache/kubeconfig/kubeconfig
             {{- end }}
             {{- with .Values.kcp.batteries }}
             - --batteries-included={{ join "," . }}
@@ -254,6 +286,16 @@ spec:
               mountPath: /etc/kcp/external-logical-cluster-admin/kubeconfig-client-cert
             - name: kcp-config
               mountPath: /etc/kcp/config
+            {{- if .Values.kcp.sharding.enabled }}
+            - name: kcp-shard-client-cert
+              mountPath: /etc/kcp/tls/shard-client
+            - name: kcp-shard-kubeconfig
+              mountPath: /etc/kcp/shard
+            {{- end }}
+            {{- if or (eq .Values.cache.enabled true) (eq .Values.externalCache.enabled true) }}
+            - name: kcp-cache-kubeconfig
+              mountPath: /etc/kcp/cache/kubeconfig
+            {{- end }}
       volumes:
         {{- if ne .Values.kcp.etcd.serverAddress "embedded" }}
         - name: kcp-etcd-client-cert
@@ -261,26 +303,26 @@ spec:
             secretName: {{ include "kcp.fullname" . }}-etcd-client-cert
         - name: etcd-client-ca
           secret:
-            secretName: {{ include "etcd.fullname" . }}-client-ca
+            secretName: {{ include "certificates.etcd" . }}-client-ca
         {{- end }}
         - name: kcp-ca
           secret:
-            secretName: {{ include "kcp.fullname" . }}-ca
+            secretName: {{ include "certificates.kcp" . }}-ca
         - name: kcp-cert
           secret:
             secretName: {{ include "kcp.fullname" .}}-cert
         - name: kcp-client-ca
           secret:
-            secretName: {{ include "kcp.fullname" . }}-client-ca
+            secretName: {{ include "certificates.kcp" . }}-client-ca
         - name: kcp-service-account-cert
           secret:
             secretName: {{ include "kcp.fullname" . }}-service-account-cert
         - name: kcp-service-account-ca
           secret:
-            secretName: {{ include "kcp.fullname" . }}-service-account-ca
+            secretName: {{ include "certificates.kcp" . }}-service-account-ca
         - name: kcp-requestheader-client-ca
           secret:
-            secretName: {{ include "kcp.fullname" . }}-requestheader-client-ca
+            secretName: {{ include "certificates.kcp" . }}-requestheader-client-ca
         {{- if .Values.oidc.enabled }}
         {{- if .Values.oidc.caSecretName }}
         - name: oidc-ca
@@ -314,9 +356,21 @@ spec:
           secret:
             secretName: {{ include "kcp.fullname" . }}-external-admin-kubeconfig-cert
         - name: kcp-config
-          emptyDir:
-            sizeLimit: 50Mi
-
+          persistentVolumeClaim:
+            claimName: {{ include "kcp.fullname" . }}
+        {{- if .Values.kcp.sharding.enabled }}
+        - name: kcp-shard-client-cert
+          secret:
+            secretName: {{ include "kcp.fullname" . }}-shard-client-cert
+        - name: kcp-shard-kubeconfig
+          secret:
+            secretName: {{ include "kcp.fullname" . }}-shard-admin-kubeconfig
+        {{- end }}
+        {{- if or (eq .Values.cache.enabled true) (eq .Values.externalCache.enabled true) }}
+        - name: kcp-cache-kubeconfig
+          secret:
+            secretName: {{ include "cache.fullname" .}}-kubeconfig
+        {{- end }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -336,3 +390,4 @@ stringData:
   {{ .Values.kcp.tokenAuth.fileName }}: |
     {{- .Values.kcp.tokenAuth.config | nindent 4 }}
 {{- end}}
+{{- end }}

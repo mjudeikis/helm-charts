@@ -12,21 +12,22 @@ externalHostname: "kcp.dev.local"
 etcd:
   enabled: true
 kcp:
+  image: quay.io/mangirdas/kcp-sharded
+  tag: v2
+ # tag: main
   enabled: true
-  v: 8
+  hostAliases:
+    enabled: true
+    values:
+    - hostnames:
+        - "kcp.dev.local"
+      ip: "10.96.180.249"
+  v: 12
   tokenAuth:
     enabled: true
-  tag: main
   batteries:
     - workspace-types
     - metrics-viewer
-# hack to run without dns
-#  hostAliases:
-#    enabled: true
-#    values:
-#    - hostnames:
-#        - "kcp.dev.local"
-#      ip: "10.96.169.47"
 externalCache:
   enabled: true
   cacheInternalHostname: "cache-cache.kcp-cache.svc"
@@ -35,3 +36,7 @@ sharding:
   isShard: true # set this to true for the all shards, false for the first (root) shard.
   isRoot: false # set this to true for the first (root) shard, false for all other shards.
   rootShardInternalHostname: "alpha.kcp-alpha.svc.cluster.local"
+caBundle:
+  enabled: false
+  configMapName: faros.sh
+  configMapKey: root-certs.pem
