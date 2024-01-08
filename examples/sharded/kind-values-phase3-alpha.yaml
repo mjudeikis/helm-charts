@@ -15,7 +15,7 @@ kcp:
   externalLogicalClusterAdminFlag: true
   tag: main
   enabled: true
-  v: 8
+  v: 12
   tokenAuth:
     enabled: true
   batteries:

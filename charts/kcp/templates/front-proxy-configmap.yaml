@@ -1,3 +1,4 @@
+{{- if .Values.kcpFrontProxy.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -7,7 +8,12 @@ metadata:
     app.kubernetes.io/component: "front-proxy"
 data:
   path-mapping.yaml: |
-    - path: /
+    - path: /clusters/
+      backend: https://{{ include "kcp.fullname" . }}:6443
+      backend_server_ca: /etc/kcp/tls/ca/tls.crt
+      proxy_client_cert: /etc/kcp-front-proxy/requestheader-client/tls.crt
+      proxy_client_key: /etc/kcp-front-proxy/requestheader-client/tls.key
+    - path: /services/
       backend: https://{{ include "kcp.fullname" . }}:6443
       backend_server_ca: /etc/kcp/tls/ca/tls.crt
       proxy_client_cert: /etc/kcp-front-proxy/requestheader-client/tls.crt
@@ -15,3 +21,4 @@ data:
     {{- with .Values.kcpFrontProxy.additionalPathMappings }}
     {{- . | toYaml | nindent 4 }}
     {{- end }}
+{{- end }}
