@@ -12,8 +12,13 @@ fullnameOverride: proxy
 # must be a valid DNS name for front proxy to work
 externalHostname: "kcp.dev.local"
 certificates:
+#  certificateIssuer:
+#     name: "kcp-letsencrypt-prod"
+#     name: "kcp-letsencrypt-staging"
+#     kind: ClusterIssuer
   dnsNames:
   - localhost
+  - kcp.faros.sh
   name: certs
   kcp:
     pki: false

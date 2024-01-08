@@ -1,3 +1,4 @@
+{{- if .Values.kcpFrontProxy.enabled }}
 {{- if .Values.kcpFrontProxy.openshiftRoute.enabled }}
 ---
 apiVersion: route.openshift.io/v1
@@ -15,7 +16,7 @@ spec:
     termination: passthrough
   to:
     kind: Service
-    name: kcp-front-proxy
+    name: {{ include "frontproxy.fullname" . }}
     weight: 100
   wildcardPolicy: None
 {{- end }}
@@ -46,7 +47,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: kcp-front-proxy
+                name: {{ include "frontproxy.fullname" . }}
                 port:
                   number: 8443
 {{- end }}
@@ -88,4 +89,5 @@ spec:
           port: 8443
   hostnames:
     - {{ .Values.externalHostname }}
+{{- end }}
 {{- end }}

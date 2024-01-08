@@ -13,21 +13,22 @@ etcd:
   enabled: true
 kcp:
   externalLogicalClusterAdminFlag: true
+  image: quay.io/mangirdas/kcp-sharded
+  tag: v2
+ # tag: main
+  hostAliases:
+    enabled: true
+    values:
+    - hostnames:
+        - "kcp.dev.local"
+      ip: "10.96.180.249"
   enabled: true
-  v: 8
+  v: 12
   tokenAuth:
     enabled: true
-  tag: main
   batteries:
     - workspace-types
     - metrics-viewer
-# hack to run without dns
-#  hostAliases:
-#    enabled: true
-#    values:
-#    - hostnames:
-#        - "kcp.dev.local"
-#      ip: "10.96.169.47"
 externalCache:
   enabled: true
   cacheInternalHostname: "cache-cache.kcp-cache.svc"
@@ -35,3 +36,7 @@ sharding:
   enabled: true
   isShard: false
   isRoot: true
+caBundle:
+  enabled: false
+  configMapName: faros.sh
+  configMapKey: root-certs.pem
