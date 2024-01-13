@@ -13,17 +13,11 @@ etcd:
   enabled: true
 kcp:
   externalLogicalClusterAdminFlag: true
-  image: quay.io/mangirdas/kcp-sharded
-  tag: v2
- # tag: main
-  hostAliases:
-    enabled: true
-    values:
-    - hostnames:
-        - "kcp.dev.local"
-      ip: "10.96.180.249"
+  #image: quay.io/mangirdas/kcp-sharded
+  #tag: v2
+  tag: main
   enabled: true
-  v: 12
+  v: 8
   tokenAuth:
     enabled: true
   batteries:

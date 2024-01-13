@@ -12,16 +12,10 @@ externalHostname: "kcp.dev.local"
 etcd:
   enabled: true
 kcp:
-  image: quay.io/mangirdas/kcp-sharded
-  tag: v2
- # tag: main
+#  image: quay.io/mangirdas/kcp-sharded
+#  tag: v2
+  tag: main
   enabled: true
-  hostAliases:
-    enabled: true
-    values:
-    - hostnames:
-        - "kcp.dev.local"
-      ip: "10.96.180.249"
   v: 12
   tokenAuth:
     enabled: true

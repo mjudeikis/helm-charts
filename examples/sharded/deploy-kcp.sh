@@ -12,11 +12,11 @@ echo "Deploy Cache server"
 helm upgrade --install --values kind-values-phase3-cache.yaml --namespace kcp-cache --create-namespace kcp-cache ../../charts/cache
 
 echo "Deploy alpha root shard"
-helm upgrade --install --values kind-values-phase3-alpha.yaml --namespace kcp-alpha --create-namespace kcp-alpha ../../charts/kcp-sharded
+helm upgrade --install --values kind-values-phase3-alpha.yaml --namespace kcp-alpha --create-namespace kcp-alpha ../../charts/shard
 
 echo "Deploy frontend proxy"
 helm upgrade --install --values kind-values-phase3-proxy.yaml --namespace kcp-proxy --create-namespace kcp-proxy ../../charts/proxy
 
 
 echo "Deploy beta shard"
-helm upgrade --install --values kind-values-phase3-beta.yaml --namespace kcp-beta --create-namespace kcp-beta ../../charts/kcp-sharded
+helm upgrade --install --values kind-values-phase3-beta.yaml --namespace kcp-beta --create-namespace kcp-beta ../../charts/shard

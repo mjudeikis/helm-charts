@@ -143,7 +143,7 @@ spec:
             - --tls-cert-file=/etc/kcp/tls/server/tls.crt
             - --service-account-key-file=/etc/kcp/tls/service-account/tls.key
             - --service-account-private-key-file=/etc/kcp/tls/service-account/tls.key
-            - --root-ca-file=/etc/kcp/tls/service-account-ca/tls.crt
+            - --root-ca-file=/etc/kcp/tls/ca/tls.crt
             - --enable-home-workspaces={{ .Values.kcp.homeWorkspaces.enabled }}
             {{- if .Values.kcp.logicalClusterAdminFlag }}
             - --logical-cluster-admin-kubeconfig=/etc/kcp/logical-cluster-admin/kubeconfig/kubeconfig
@@ -258,8 +258,6 @@ spec:
               mountPath: /etc/kcp/tls/client-ca
             - name: kcp-service-account-cert
               mountPath: /etc/kcp/tls/service-account
-            - name: kcp-service-account-ca
-              mountPath: /etc/kcp/tls/service-account-ca
             - name: kcp-requestheader-client-ca
               mountPath: /etc/kcp/tls/requestheader-client-ca
             {{- if .Values.oidc.enabled }}
@@ -323,10 +321,7 @@ spec:
             secretName: {{ include "certificates.kcp" . }}-client-ca
         - name: kcp-service-account-cert
           secret:
-            secretName: {{ include "kcp.fullname" . }}-service-account-cert
-        - name: kcp-service-account-ca
-          secret:
-            secretName: {{ include "certificates.kcp" . }}-service-account-ca
+            secretName: certs-kcp-service-account-ca
         - name: kcp-requestheader-client-ca
           secret:
             secretName: {{ include "certificates.kcp" . }}-requestheader-client-ca

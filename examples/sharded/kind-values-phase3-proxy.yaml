@@ -17,13 +17,6 @@ kcpFrontProxy:
   image: quay.io/mangirdas/kcp-sharded
   tag: v2
  # tag: main
-  v: 12
-  hostAliases:
-    enabled: true
-    values:
-    - hostnames:
-        - "kcp.dev.local"
-      ip: "10.96.180.249"
   enabled: true
   ingress:
     secret: proxy-front-proxy-cert

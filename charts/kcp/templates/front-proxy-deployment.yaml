@@ -89,6 +89,7 @@ spec:
             - --tls-cert-file=/etc/kcp-front-proxy/tls/tls.crt
             - --client-ca-file=/etc/kcp-front-proxy/client-ca/tls.crt
             - --service-account-key-file=/etc/kcp/tls/service-account/tls.key
+            - --service-account-private-key-file=/etc/kcp/tls/service-account/tls.key
             - --mapping-file=/etc/kcp-front-proxy/config/path-mapping.yaml
             - --v={{ .Values.kcpFrontProxy.v }}
             - --logging-format=json
