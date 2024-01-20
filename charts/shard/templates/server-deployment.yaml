@@ -321,7 +321,7 @@ spec:
             secretName: {{ include "certificates.kcp" . }}-client-ca
         - name: kcp-service-account-cert
           secret:
-            secretName: certs-kcp-service-account-ca
+            secretName: {{ include "certificates.kcp" . }}-service-account-ca
         - name: kcp-requestheader-client-ca
           secret:
             secretName: {{ include "certificates.kcp" . }}-requestheader-client-ca
