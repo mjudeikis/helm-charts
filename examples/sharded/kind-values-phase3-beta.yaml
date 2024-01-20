@@ -22,6 +22,8 @@ kcp:
   batteries:
     - workspace-types
     - metrics-viewer
+  extraFlags:
+  - --feature-gates=WorkspaceMounts=true
 externalCache:
   enabled: true
   cacheInternalHostname: "cache-cache.kcp-cache.svc"
