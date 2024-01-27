@@ -54,3 +54,12 @@ caBundle:
   enabled: false
   configMapName: faros.sh
   configMapKey: root-certs.pem
+oidc:
+  enabled: true
+  issuerUrl: https://idp.dev.local:6443
+  clientId: faros
+  groupClaim: groups
+  usernameClaim: email
+  usernamePrefix: faros-idp-
+  groupsPrefix: faros-idp-
+  caSecretName: dex-pki-ca
