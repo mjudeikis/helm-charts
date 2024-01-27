@@ -70,7 +70,6 @@ kcpFrontProxy:
   tag: "main"
   v: "4"
   pullPolicy: IfNotPresent
-  v: "4"
   tokenAuth:
     enabled: false
     fileName: auth-token.csv
