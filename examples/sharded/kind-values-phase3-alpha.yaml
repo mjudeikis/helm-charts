@@ -24,7 +24,7 @@ kcp:
     - workspace-types
     - metrics-viewer
   extraFlags:
-  - --feature-gates=WorkspaceMounts=true
+  - --feature-gates=WorkspaceMounts=true,WorkspaceRootRequests=true
   homeWorkspaces:
     enabled: true
 externalCache:
