@@ -149,7 +149,7 @@ spec:
             - --logical-cluster-admin-kubeconfig=/etc/kcp/logical-cluster-admin/kubeconfig/kubeconfig
             {{- end }}
             - --external-logical-cluster-admin-kubeconfig=/etc/kcp/external-logical-cluster-admin/kubeconfig/kubeconfig
-            - --requestheader-client-ca-file=/etc/kcp/tls/requestheader-client-ca/tls.crt
+            - --requestheader-client-ca-file=/etc/kcp/tls/ca-bundle/{{ .Values.caBundle.configMapKey }}
             - --requestheader-username-headers=X-Remote-User
             - --requestheader-group-headers=X-Remote-Group
             - --root-directory=/etc/kcp/config
@@ -172,6 +172,8 @@ spec:
             - '--oidc-groups-prefix={{ .Values.oidc.groupsPrefix }}'
             {{- if .Values.oidc.caSecretName }}
             - --oidc-ca-file=/etc/kcp/tls/oidc/{{ .Values.oidc.caSecretKeyName }}
+            {{- else if .Values.caBundle.enabled }}
+            - --oidc-ca-file=/etc/kcp/tls/ca-bundle/{{ .Values.caBundle.configMapKey }}
             {{- end }}
             {{- end }}
             {{- if .Values.kcp.tokenAuth.enabled }}
