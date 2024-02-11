@@ -100,6 +100,8 @@ spec:
             - '--oidc-groups-prefix={{ .Values.oidc.groupsPrefix }}'
             {{- if .Values.oidc.caSecretName }}
             - --oidc-ca-file=/etc/kcp/tls/oidc/{{ .Values.oidc.caSecretKeyName }}
+            {{- else if .Values.caBundle.enabled }}
+            - --oidc-ca-file=/etc/kcp/tls/ca-bundle/{{ .Values.caBundle.configMapKey }}
             {{- end }}
             {{- end }}
             {{- if .Values.kcpFrontProxy.tokenAuth.enabled }}
@@ -154,6 +156,10 @@ spec:
             - name: kcp-token-auth-file
               mountPath: /etc/kcp/token-auth
             {{- end}}
+            {{- if .Values.caBundle.enabled }}
+            - name: kcp-ca-bundle
+              mountPath: /etc/kcp/tls/ca-bundle
+            {{- end }}
             # these mounts are required for the path-mapping.yaml, which references specific certificates
             - name: kcp-ca
               mountPath: /etc/kcp/tls/ca
@@ -211,6 +217,11 @@ spec:
         - name: kcp-shards-kubeconfig
           secret:
             secretName: {{ include "frontproxy.fullname" . }}-shard-admin-kubeconfig
+        {{- if .Values.caBundle.enabled }}
+        - name: kcp-ca-bundle
+          configMap:
+              name: {{ .Values.caBundle.configMapName }}
+        {{- end }}
 {{- with .Values.kcpFrontProxy.extraVolumes }}
 {{ . | toYaml | indent 8 }}
 {{- end }}

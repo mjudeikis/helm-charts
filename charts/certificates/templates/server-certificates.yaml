@@ -222,7 +222,7 @@ spec:
     organizations:
       - "system:masters"
       - "system:admins"
-      - "system:kcp:admins"
+      - "system:kcp:admin"
   usages:
     - client auth
   issuerRef:

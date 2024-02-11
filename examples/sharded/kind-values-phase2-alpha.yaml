@@ -9,7 +9,7 @@
 #
 
 fullnameOverride: alpha
-externalHostname: "kcp.dev.local"
+externalHostname: "kcp.faros.sh"
 certificates:
   dnsNames:
   - localhost
