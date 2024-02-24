@@ -1,4 +1,5 @@
 {{- if .Values.certificates.kcp.certs -}}
+---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -73,6 +74,8 @@ spec:
     {{- toYaml .Values.certificates.secretTemplate.labels | nindent 6 }}
 {{- end }}
 {{- end }}
+
+{{- if .Values.etcd.enabled }}
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
