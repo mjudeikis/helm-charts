@@ -119,7 +119,7 @@ spec:
             {{- else if .Values.etcd.enabled }}
             - --etcd-servers=https://{{ include "etcd.fullname" . }}:2379
             {{- end }}
-            {{- if ne .Values.kcp.etcd.type "embedded" }}
+            {{- if eq .Values.kcp.etcd.type "" }}
             - --etcd-keyfile=/etc/kcp/tls/etcd-client/tls.key
             - --etcd-certfile=/etc/kcp/tls/etcd-client/tls.crt
             - --etcd-cafile=/etc/etcd/tls/client-ca/tls.crt
