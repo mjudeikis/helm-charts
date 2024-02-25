@@ -24,12 +24,7 @@ spec:
   ipAddresses:
     - 0.0.0.0
   issuerRef:
-    {{- if .Values.kine.certificateIssuer }}
-    {{ .Values.kine.certificateIssuer | toYaml | nindent 4 }}
-    {{- else }}
-    name: {{ include "kine.fullname" . }}-pki
-    kind: Issuer
-    {{- end }}
+    name: {{ include "certificates.kcp" . }}-pki
 {{- if .Values.certificates.secretTemplate.enabled }}
   secretTemplate:
 {{- if .Values.certificates.secretTemplate.annotations }}

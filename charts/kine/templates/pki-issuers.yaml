@@ -1,3 +1,4 @@
+{{- if .Values.certificates.kine.pki -}}
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
@@ -40,3 +41,4 @@ metadata:
 spec:
   ca:
     secretName: {{ include "kine.fullname" . }}-pki-ca
+{{- end }}

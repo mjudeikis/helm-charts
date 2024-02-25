@@ -5,6 +5,9 @@ certificates:
   kcp:
     pki: true
     certs: true
+  kine:
+    pki: true
+    certs: true
   frontproxy:
     pki: true
     certs: true

@@ -118,5 +118,5 @@ spec:
             secretName: {{ include "certificates.kcp" . }}-ca
         - name: cache-cert
           secret:
-            secretName: {{ include "cache.fullname" .}}-cert
+            secretName: {{ include "cache.fullname" . }}-cert
 {{- end }}

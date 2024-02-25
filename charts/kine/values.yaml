@@ -19,6 +19,9 @@ kine:
     port: 5432
     database: kine
 certificates:
+  kine:
+    certs: false
+    pki: false
   privateKeys:
     algorithm: RSA
     size: 2048
