@@ -4,8 +4,8 @@ kine:
   tag: v0.11.4-1
   resources:
     requests:
-      cpu: 500m
-      memory: 2Gi
+      cpu: 200m
+      memory: 100Mi
     limits:
       # cpu: 1
      memory: 20Gi

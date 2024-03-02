@@ -47,7 +47,7 @@ spec:
             - --metrics-enable-profiling=true \
             {{- end }}
             {{- if .Values.kine.postgres.enabled }}
-            --endpoint=postgres://{{ .Values.kine.postgres.user }}:{{ .Values.kine.postgres.password }}@{{ .Values.kine.postgres.host }}:{{ .Values.kine.postgres.port }}/{{ .Values.kine.postgres.database }} \
+            - --endpoint=postgres://{{ .Values.kine.postgres.user }}:{{ .Values.kine.postgres.password }}@{{ .Values.kine.postgres.host }}:{{ .Values.kine.postgres.port }}/{{ .Values.kine.postgres.database }}
             {{- end }}
           ports:
             - containerPort: 2379
