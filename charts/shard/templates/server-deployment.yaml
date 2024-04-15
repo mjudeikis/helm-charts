@@ -344,7 +344,7 @@ spec:
             secretName: {{ include "certificates.kcp" . }}-client-ca
         - name: kcp-service-account-cert
           secret:
-            secretName: {{ include "kcp.fullname" . }}-service-account-cert
+            secretName: {{ include "frontproxy.fullname" . }}-service-account-cert
         - name: kcp-service-account-ca
           secret:
             secretName: {{ include "certificates.kcp" . }}-service-account-ca
