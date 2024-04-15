@@ -188,7 +188,7 @@ spec:
             secretName: {{ include "certificates.frontproxy" . }}-client-ca
         - name: kcp-service-account-cert
           secret:
-            secretName: proxy-front-proxy-service-account-cert
+            secretName: {{ include "certificates.kcp" . }}-service-account-cert
         - name: kcp-front-proxy-config
           configMap:
             name: {{ include "frontproxy.fullname" . }}-config
