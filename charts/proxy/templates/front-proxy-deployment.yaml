@@ -33,7 +33,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  type: {{ .Values.kcpFrontProxy.service.type }}
+  type: {{ .Values.kcpFrontProxy.service.internalType }}
   ports:
     - protocol: TCP
       name: kcp-front-proxy
