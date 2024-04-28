@@ -20,9 +20,14 @@ kcp:
     - hostnames:
         - "kcp.dev.local"
       ip: "10.96.180.249"
-  v: 12
+  v: 8
   tokenAuth:
     enabled: true
+    fileName: auth-token.csv
+    config: |
+        734c8b1b-6622-49be-a9bd-aa2a79f6e1c6,external-logical-cluster-admin,1111-1111-1111-1111,"system:kcp:external-logical-cluster-admin"
+        d146d43d-cee3-44e3-8a22-a89f707bf577,system-kcp-admin,5555-5555-5555-5555,"system:kcp:admin"
+        81dbe8dc-ae4c-454b-ad87-3ec18eab568b,system-masters,6666-6666-6666-6666,"system:masters"
   batteries:
     - workspace-types
     - metrics-viewer
