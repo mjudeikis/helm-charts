@@ -26,6 +26,9 @@ certificates:
   etcd:
     pki: false
     certs: true
+  kine:
+    pki: false
+    certs: false
   cache:
     pki: false
     certs: false

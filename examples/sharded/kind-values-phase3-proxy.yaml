@@ -14,16 +14,8 @@ etcd:
 kcp:
   enabled: false
 kcpFrontProxy:
-  image: quay.io/mangirdas/kcp-sharded
   tag: v2
- # tag: main
-  v: 12
-  hostAliases:
-    enabled: true
-    values:
-    - hostnames:
-        - "kcp.dev.local"
-      ip: "10.96.180.249"
+  v: 8
   enabled: true
   ingress:
     secret: proxy-front-proxy-cert
@@ -36,16 +28,40 @@ kcpFrontProxy:
       nginx.ingress.kubernetes.io/backend-protocol: HTTPS
   tokenAuth:
     enabled: true
+    fileName: auth-token.csv
+    config: |
+        734c8b1b-6622-49be-a9bd-aa2a79f6e1c6,external-logical-cluster-admin,1111-1111-1111-1111,"system:kcp:external-logical-cluster-admin"
+        d146d43d-cee3-44e3-8a22-a89f707bf577,system-kcp-admin,5555-5555-5555-5555,"system:kcp:admin"
+        81dbe8dc-ae4c-454b-ad87-3ec18eab568b,system-masters,6666-6666-6666-6666,"system:masters"
+  additionalPathMappings:
+    - path: /services/edge-proxy
+      backend: https://virtualworkspaces.cluster-proxy.svc:8443
+      backend_server_ca: /etc/kcp/tls/ca/tls.crt
+      proxy_client_cert: /etc/kcp-front-proxy/requestheader-client/tls.crt
+      proxy_client_key: /etc/kcp-front-proxy/requestheader-client/tls.key
+    - path: /services/cluster-proxy
+      backend: https://virtualworkspaces.cluster-proxy.svc:8443
+      backend_server_ca: /etc/kcp/tls/ca/tls.crt
+      proxy_client_cert: /etc/kcp-front-proxy/requestheader-client/tls.crt
+      proxy_client_key: /etc/kcp-front-proxy/requestheader-client/tls.key
 cache:
   enabled: false
 certificates:
   name: certs
 sharding:
   enabled: false
-  isShard: false # set this to true for the all shards, false for the first (root) shard.
   isRoot: true # set this to true for the first (root) shard, false for all other shards.
   rootShardInternalHostname: "alpha.kcp-alpha.svc.cluster.local"
 caBundle:
   enabled: false
   configMapName: faros.sh
   configMapKey: root-certs.pem
+oidc:
+  enabled: true
+  issuerUrl: https://idp.dev.local:6443
+  clientId: kcp-dev
+  groupClaim: groups
+  usernameClaim: email
+  usernamePrefix: kcp-dev-idp-
+  groupsPrefix: kcp-dev-idp-
+  caSecretName: dex-pki-ca
