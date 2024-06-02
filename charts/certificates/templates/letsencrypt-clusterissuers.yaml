@@ -16,9 +16,7 @@ spec:
       name: {{ include "kcp.fullname" . }}-le-issuer-account-key
     # Add a single challenge solver, HTTP01 using nginx
     solvers:
-    - http01:
-        ingress:
-          class: nginx
+    {{- toYaml .Values.letsEncrypt.staging.solvers | nindent 4 }}
 {{ end }}
 {{ if .Values.letsEncrypt.production.enabled }}
 ---
@@ -38,8 +36,6 @@ spec:
       name: {{ include "kcp.fullname" . }}-le-issuer-account-key
     # Add a single challenge solver, HTTP01 using nginx
     solvers:
-    - http01:
-        ingress:
-          class: nginx
+    {{- toYaml .Values.letsEncrypt.production.solvers | nindent 4 }}
 {{ end }}
 {{ end }}
